@@ -31,7 +31,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           LATEST_TAG: dev-latest
         run: |
-          docker build -f RetPageOriginDockerfile -t $REPOSITORY_NAME .
+          docker build -f TurkeyDockerfile -t $REPOSITORY_NAME .
           docker tag $REPOSITORY_NAME:latest $ECR_REGISTRY/$REPOSITORY_NAME:$LATEST_TAG
           docker push $ECR_REGISTRY/$REPOSITORY_NAME:$LATEST_TAG
           docker tag $REPOSITORY_NAME:latest $ECR_REGISTRY/$REPOSITORY_NAME:$IMAGE_TAG
