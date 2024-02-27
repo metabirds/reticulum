@@ -372,6 +372,7 @@ defmodule Ret.MediaResolver do
          version: version
        }) do
     photomnemonic_endpoint = module_config(:photomnemonic_endpoint)
+    Logger.info("photomnemonic_endpoint: #{photomnemonic_endpoint}")
 
     # Crawl og tags for hubs rooms + scenes
     is_local_url = host === RetWeb.Endpoint.host()
