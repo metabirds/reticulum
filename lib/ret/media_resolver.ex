@@ -36,6 +36,8 @@ defmodule Ret.MediaResolver do
     query = Map.put(query, :url, uri)
 
     Logger.info(inspect(query))
+    photomnemonic_endpoint = module_config(:photomnemonic_endpoint)
+    Logger.info("photomnemonic_endpoint: #{photomnemonic_endpoint}")
 
     # TODO: We could end up running maybe_fallback_to_screenshot_opengraph_or_nothing
     #       twice in a row. These resolve functions can be simplified so that we can
