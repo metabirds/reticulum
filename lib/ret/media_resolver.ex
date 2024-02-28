@@ -137,7 +137,9 @@ defmodule Ret.MediaResolver do
   end
 
   def resolve_with_ytdl(%MediaResolverQuery{} = query, root_host, ytdl_format) do
+    Logger.info("resolve_with_ytdl called #{inspect(query)}")
     with ytdl_host when is_binary(ytdl_host) <- module_config(:ytdl_host) do
+      Logger.info("resolve_with_ytdl called 2 #{inspect(ytdl_host)}")
       case fetch_ytdl_response(query, ytdl_format) do
         {:offline_stream, _body} ->
           {:commit,
