@@ -138,50 +138,50 @@ defmodule Ret.MediaResolver do
 
   def resolve_with_ytdl(%MediaResolverQuery{} = query, root_host, ytdl_format) do
     Logger.info("resolve_with_ytdl called #{inspect(query)}")
-    with ytdl_host when is_binary(ytdl_host) <- module_config(:ytdl_host) do
-      Logger.info("resolve_with_ytdl called 2 #{inspect(ytdl_host)}")
-      case fetch_ytdl_response(query, ytdl_format) do
-        {:offline_stream, _body} ->
-          {:commit,
-           resolved(query.url, %{
-             expected_content_type: "text/html",
-             media_status: :offline_stream,
-             thumbnail: RetWeb.Endpoint.static_url() <> "/stream-offline.png"
-           })}
+    # with ytdl_host when is_binary(ytdl_host) <- module_config(:ytdl_host) do
+    #   Logger.info("resolve_with_ytdl called 2 #{inspect(ytdl_host)}")
+    #   case fetch_ytdl_response(query, ytdl_format) do
+    #     {:offline_stream, _body} ->
+    #       {:commit,
+    #        resolved(query.url, %{
+    #          expected_content_type: "text/html",
+    #          media_status: :offline_stream,
+    #          thumbnail: RetWeb.Endpoint.static_url() <> "/stream-offline.png"
+    #        })}
 
-        {:rate_limited, _body} ->
-          {:commit,
-           resolved(query.url, %{
-             expected_content_type: "text/html",
-             media_status: :rate_limited,
-             thumbnail: RetWeb.Endpoint.static_url() <> "/quota-error.png"
-           })}
+    #     {:rate_limited, _body} ->
+    #       {:commit,
+    #        resolved(query.url, %{
+    #          expected_content_type: "text/html",
+    #          media_status: :rate_limited,
+    #          thumbnail: RetWeb.Endpoint.static_url() <> "/quota-error.png"
+    #        })}
 
-        {:ok, media_url} ->
-          if query_ytdl_audio?(query) do
-            # For 360 video quality types, we fetch the audio track separately since
-            # YouTube serves up a separate webm for audio.
-            resolve_with_ytdl_audio(query, media_url)
-          else
-            {:commit,
-             media_url
-             |> URI.parse()
-             |> resolved(
-               %{
-                 # TODO we would like to return a content type here but need to understand the response
-                 # from youtube-dl better to do so confidently, as it will not always be video
-                 # expected_content_type: "video/*"
-               }
-             )}
-          end
+    #     {:ok, media_url} ->
+    #       if query_ytdl_audio?(query) do
+    #         # For 360 video quality types, we fetch the audio track separately since
+    #         # YouTube serves up a separate webm for audio.
+    #         resolve_with_ytdl_audio(query, media_url)
+    #       else
+    #         {:commit,
+    #          media_url
+    #          |> URI.parse()
+    #          |> resolved(
+    #            %{
+    #              # TODO we would like to return a content type here but need to understand the response
+    #              # from youtube-dl better to do so confidently, as it will not always be video
+    #              # expected_content_type: "video/*"
+    #            }
+    #          )}
+    #       end
 
-        _ ->
-          resolve_non_video(query, root_host)
-      end
-    else
-      _err ->
+    #     _ ->
+    #       resolve_non_video(query, root_host)
+    #   end
+    # else
+    #   _err ->
         resolve_non_video(query, root_host)
-    end
+    # end
   end
 
   def resolve_with_ytdl_audio(%MediaResolverQuery{} = query, video_url) do
