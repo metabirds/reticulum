@@ -121,6 +121,8 @@ defmodule Ret.MediaResolver do
     # to ensure that it is allowed.
     resolved_ip = HttpUtils.resolve_ip(query.url.host)
 
+    Logger.info("resolved_ip: #{inspect(resolved_ip)}"
+
     case resolved_ip do
       nil ->
         :error
@@ -346,6 +348,7 @@ defmodule Ret.MediaResolver do
   end
 
   defp resolve_non_video(%MediaResolverQuery{} = query, _root_host) do
+    Logger.info("resolce_non_video called #{inspect(query)}");
     maybe_fallback_to_screenshot_opengraph_or_nothing(query)
   end
 
