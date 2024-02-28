@@ -121,7 +121,7 @@ defmodule Ret.MediaResolver do
     # to ensure that it is allowed.
     resolved_ip = HttpUtils.resolve_ip(query.url.host)
 
-    Logger.info("resolved_ip: #{inspect(resolved_ip)}"
+    Logger.info("resolved_ip: #{inspect(resolved_ip)}")
 
     case resolved_ip do
       nil ->
