@@ -394,6 +394,8 @@ defmodule Ret.MediaResolver do
         :error
 
       %HTTPoison.Response{headers: headers} ->
+        Logger.info("headers: #{inspect(headers)}")
+
         content_type = headers |> content_type_from_headers
         has_entity_type = headers |> get_http_header("hub-entity-type") != nil
 
