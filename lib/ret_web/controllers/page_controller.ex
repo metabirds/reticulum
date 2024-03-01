@@ -694,12 +694,8 @@ defmodule RetWeb.PageController do
       # is_cors_proxy_url =
       #   cors_scheme == Atom.to_string(conn.scheme) && cors_host == conn.host &&
       #     cors_port == conn.port
-
       is_cors_proxy_url = cors_host == conn.host
-
-      Logger.info("#{inspect(conn.scheme)}://#{conn.host}:#{conn.port} == #{cors_scheme}://#{cors_host}:#{cors_port}")
-
-      Logger.info("is_cors_proxy_url: #{inspect(is_cors_proxy_url)}")
+      IO.puts("is_cors_proxy_url: #{is_cors_proxy_url}")
 
       if is_cors_proxy_url do
         allowed_origins =
@@ -709,7 +705,7 @@ defmodule RetWeb.PageController do
 
         opts =
           ReverseProxyPlug.init(
-            upstream: ip_url,
+            upstream: url,
             allowed_origins: allowed_origins,
             proxy_url: "#{cors_scheme}://#{cors_host}:#{cors_port}",
             # Since we replaced the host with the IP address in ip_url above, we need to force the host
@@ -717,9 +713,9 @@ defmodule RetWeb.PageController do
             # Note that we have to convert the authority to a charlist, since this uses Erlang's `ssl` module
             # internally, which expects a charlist.
             client_options: [
-              ssl: [{:server_name_indication, to_charlist(authority)}, {:versions, [:"tlsv1.2"]}]
+              ssl: [{:server_name_indication, to_charlist(authority)}, {:versions, [:"tlsv1.2",:"tlsv1.3"]}]
             ],
-            preserve_host_header: true
+            # preserve_host_header: true
           )
 
         body = ReverseProxyPlug.read_body(conn)
@@ -739,11 +735,6 @@ defmodule RetWeb.PageController do
         )
         # Need to strip path_info since proxy plug reads it
         |> Map.put(:path_info, [])
-        # Since we replaced the host with the IP address in ip_url above, we need to force the host
-        # header back to the original authority so that the proxy destination does not reject our request
-        |> Map.update!(:req_headers, &[{"host", authority} | &1])
-        # Some domains disallow access from improper Origins
-        |> Conn.delete_req_header("origin")
         |> ReverseProxyPlug.request(body, opts)
         |> ReverseProxyPlug.response(conn, opts)
       else
