@@ -695,7 +695,7 @@ defmodule RetWeb.PageController do
         cors_scheme == Atom.to_string(conn.scheme) && cors_host == conn.host &&
           cors_port == conn.port
 
-      Logger.info("cors_proxy_url: #{cors_proxy_url}")
+      Logger.info("is_cors_proxy_url: #{inspect(is_cors_proxy_url)}")
 
       if is_cors_proxy_url do
         allowed_origins =
