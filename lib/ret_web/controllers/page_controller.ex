@@ -676,7 +676,7 @@ defmodule RetWeb.PageController do
 
     resolved_ip = HttpUtils.resolve_ip(host)
 
-    Logger.info("cors_proxy(conn, url) resolved_ip: #{resolved_ip}")
+    Logger.info("cors_proxy(conn, url) resolved_ip: #{inspect(resolved_ip)}")
 
     if HttpUtils.internal_ip?(resolved_ip) do
       conn |> send_resp(401, "Bad request.")
