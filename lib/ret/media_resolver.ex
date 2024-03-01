@@ -35,7 +35,7 @@ defmodule Ret.MediaResolver do
     root_host = get_root_host(uri.host)
     query = Map.put(query, :url, uri)
 
-    Logger.info(`resolve - url called.`)
+    Logger.info("resolve - url called.")
     Logger.info(inspect(query))
 
     # TODO: We could end up running maybe_fallback_to_screenshot_opengraph_or_nothing
