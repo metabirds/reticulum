@@ -1,6 +1,8 @@
 defmodule RetWeb.PageController do
   use RetWeb, :controller
 
+  require Logger
+
   alias Ret.{
     Repo,
     Hub,
@@ -712,6 +714,8 @@ defmodule RetWeb.PageController do
 
         body = ReverseProxyPlug.read_body(conn)
         is_head = conn |> Conn.get_req_header("x-original-method") == ["HEAD"]
+
+        Logger.info("cors_proxy called")
 
         %Conn{}
         |> Map.merge(conn)

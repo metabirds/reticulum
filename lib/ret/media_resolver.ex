@@ -35,9 +35,8 @@ defmodule Ret.MediaResolver do
     root_host = get_root_host(uri.host)
     query = Map.put(query, :url, uri)
 
+    Logger.info(`resolve - url called.`)
     Logger.info(inspect(query))
-    photomnemonic_endpoint = module_config(:photomnemonic_endpoint)
-    Logger.info("photomnemonic_endpoint: #{photomnemonic_endpoint}")
 
     # TODO: We could end up running maybe_fallback_to_screenshot_opengraph_or_nothing
     #       twice in a row. These resolve functions can be simplified so that we can
@@ -139,7 +138,6 @@ defmodule Ret.MediaResolver do
   def resolve_with_ytdl(%MediaResolverQuery{} = query, root_host, ytdl_format) do
     Logger.info("resolve_with_ytdl called #{inspect(query)}")
     with ytdl_host when is_binary(ytdl_host) <- module_config(:ytdl_host) do
-      Logger.info("resolve_with_ytdl called 2 #{inspect(ytdl_host)}")
       case fetch_ytdl_response(query, ytdl_format) do
         {:offline_stream, _body} ->
           {:commit,
@@ -379,7 +377,6 @@ defmodule Ret.MediaResolver do
          version: version
        }) do
     photomnemonic_endpoint = module_config(:photomnemonic_endpoint)
-    Logger.info("photomnemonic_endpoint: #{photomnemonic_endpoint}")
 
     # Crawl og tags for hubs rooms + scenes
     is_local_url = host === RetWeb.Endpoint.host()
@@ -394,8 +391,6 @@ defmodule Ret.MediaResolver do
         :error
 
       %HTTPoison.Response{headers: headers} ->
-        Logger.info("headers: #{inspect(headers)}")
-
         content_type = headers |> content_type_from_headers
         has_entity_type = headers |> get_http_header("hub-entity-type") != nil
 
