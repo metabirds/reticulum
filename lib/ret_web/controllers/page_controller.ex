@@ -691,9 +691,11 @@ defmodule RetWeb.PageController do
       [cors_scheme, cors_port, cors_host] =
         [:scheme, :port, :host] |> Enum.map(&Keyword.get(cors_proxy_url, &1))
 
-      is_cors_proxy_url =
-        cors_scheme == Atom.to_string(conn.scheme) && cors_host == conn.host &&
-          cors_port == conn.port
+      # is_cors_proxy_url =
+      #   cors_scheme == Atom.to_string(conn.scheme) && cors_host == conn.host &&
+      #     cors_port == conn.port
+
+      is_cors_proxy_url = cors_host == conn.host
 
       Logger.info("#{inspect(conn.scheme)}://#{conn.host}:#{conn.port} == #{cors_scheme}://#{cors_host}:#{cors_port}")
 
