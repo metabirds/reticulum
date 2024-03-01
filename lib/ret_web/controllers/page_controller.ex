@@ -676,7 +676,7 @@ defmodule RetWeb.PageController do
 
     resolved_ip = HttpUtils.resolve_ip(host)
 
-    Logger.info("cors_proxy(conn, url)")
+    Logger.info("cors_proxy(conn, url) resolved_ip: #{resolved_ip}")
 
     if HttpUtils.internal_ip?(resolved_ip) do
       conn |> send_resp(401, "Bad request.")
@@ -695,9 +695,13 @@ defmodule RetWeb.PageController do
         cors_scheme == Atom.to_string(conn.scheme) && cors_host == conn.host &&
           cors_port == conn.port
 
+      Logger.info("cors_proxy_url: #{cors_proxy_url}")
+
       if is_cors_proxy_url do
         allowed_origins =
           Application.get_env(:ret, RetWeb.Endpoint)[:allowed_origins] |> String.split(",")
+
+        Logger.info("allowed_origins: #{inspect(allowed_origins)}")
 
         opts =
           ReverseProxyPlug.init(
