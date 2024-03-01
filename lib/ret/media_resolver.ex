@@ -348,7 +348,7 @@ defmodule Ret.MediaResolver do
   end
 
   defp resolve_non_video(%MediaResolverQuery{} = query, _root_host) do
-    Logger.info("resolce_non_video called #{inspect(query)}");
+    Logger.info("resolve_non_video called #{inspect(query)}");
     maybe_fallback_to_screenshot_opengraph_or_nothing(query)
   end
 
